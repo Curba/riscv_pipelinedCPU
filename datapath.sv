@@ -3,6 +3,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
                  input logic RegWrite, PCSrc,
 				input logic [3:0] ALUOp,
                 input logic [1:0] ALUSrc,
+                input logic RbSelect,
 				output logic [7:0] Op);
 
 
@@ -19,7 +20,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	logic [7:0] datamem [127:0];
 	logic [6:0] datamem_address;
     logic [31:0] datamem_data;
-
+    logic [31:0] datamem_write_data;
 	// ... may have other logic signal declarations here
 
 	// IF/ID Pipeline staging register fields can be represented using structure format of System Verilog
@@ -49,7 +50,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 	//register logic
 	assign da = RF[IfId.instruction[26:22]] ;
-	assign db = RF[IfId.instruction[21:17]] ;
+	assign db = (RbSelect)? RF[IfId.instruction[31:27]]:RF[IfId.instruction[21:17]] ;
 
     always_comb
         case(MemWb.MemToReg)
@@ -209,14 +210,16 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 	// Data	Memory Address
 	assign datamem_address = ExMem.Alu1out[6:0];
+    assign datamem_write_data = ExMem.db;
 
 	// Data Memory Write Logic
 	always @(posedge clk) begin
 		if (ExMem.MemWrite) begin
-			datamem[datamem_address] <= ExMem.Alu1out[31:24];
-			datamem[datamem_address+1] <= ExMem.Alu1out[23:16];
-			datamem[datamem_address+2] <= ExMem.Alu1out[15:8];
-			datamem[datamem_address+3] <= ExMem.Alu1out[7:0];
+			datamem[datamem_address] <= datamem_write_data[31:24];
+			datamem[datamem_address+1] <= datamem_write_data[23:16];
+			datamem[datamem_address+2] <= datamem_write_data[15:8];
+			datamem[datamem_address+3] <= datamem_write_data[7:0];
+            $writememh("data_memory.dat", datamem);
 		end
 	end
 

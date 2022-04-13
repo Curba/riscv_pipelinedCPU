@@ -19,6 +19,7 @@
 #define RegWrite        top__DOT__RegWrite
 #define ALUOp           top__DOT__ALUOp
 #define ALUSrc          top__DOT_ALUSrc
+#define RbSelect        top__DOT_RbSelect
 #define datamem         top__DOT__datapath__DOT__datamem
 #define RF              top__DOT__datapath__DOT__RF
 #define instmem         top__DOT__datapath__DOT__instmem

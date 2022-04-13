@@ -10,6 +10,7 @@ module top (
 	logic RegWrite;
 	logic [3:0] ALUOp;
 	logic [1:0] ALUSrc;
+    logic RbSelect;
 
 control ctr(
     .Op         (Op),
@@ -19,7 +20,8 @@ control ctr(
     .MemRead    (MemRead),
     .MemWrite   (MemWrite),
     .MemToReg   (MemToReg),
-    .RegWrite   (RegWrite)
+    .RegWrite   (RegWrite),
+    .RbSelect   (RbSelect)
 );
 
 
@@ -34,6 +36,7 @@ datapath datapath(
     .PCSrc      (PCSrc),
     .ALUSrc     (ALUSrc),
     .ALUOp      (ALUOp),
+    .RbSelect   (RbSelect),
     .Op         (Op)
 );
 

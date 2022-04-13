@@ -22,6 +22,7 @@ VL_MODULE(Vtop___024root) {
     CData/*0:0*/ top__DOT__RegWrite;
     CData/*3:0*/ top__DOT__ALUOp;
     CData/*1:0*/ top__DOT__ALUSrc;
+    CData/*0:0*/ top__DOT__RbSelect;
     CData/*6:0*/ top__DOT__datapath__DOT__PC;
     CData/*0:0*/ __Vclklast__TOP__clock;
     IData/*31:0*/ top__DOT__datapath__DOT__instmem_data;
