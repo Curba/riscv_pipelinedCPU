@@ -2,12 +2,11 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
                 input logic [1:0] MemToReg,
                  input logic RegWrite, PCSrc,
 				input logic [3:0] ALUOp,
+                input logic [1:0] ALUSrc,
 				output logic [7:0] Op);
 
 
 	logic [6:0]PC;
-	logic [1:0]ALUSrc;
-	assign ALUSrc = 2'b00;
 	logic [6:0] PCSTART; //starting address of instruction memory
 	assign PCSTART = 0;
 
@@ -25,7 +24,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 	// IF/ID Pipeline staging register fields can be represented using structure format of System Verilog
 	// You may refer to the first field in the structure as IfId.instruction for example
-	struct {
+	struct packed{
 		logic [31:0] instruction;
 		logic [6:0] PCincremented;
 	} IfId;
@@ -70,7 +69,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		end
 	end
 
-	struct {
+	struct packed{
 		logic [1:0] ALUSrc;
 	    logic [3:0] ALUOp;
 		logic [1:0]MemToReg;
@@ -138,7 +137,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	//assign Left_mux = (PCSrc) ? JumpAddress:PC+4;
 
 
-	struct {
+	struct packed{
 	    //control signals
 		logic [6:0] PCincremented;
 		logic MemRead;
@@ -166,7 +165,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 
 	//memwb
-	struct {
+	struct packed{
 	    //control signals
 		logic [6:0] PCincremented;
 		logic RegWrite;
