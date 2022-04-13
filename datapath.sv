@@ -1,8 +1,8 @@
-module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
-                 RegWrite, RegDst, Jump, PCSrc,
+module datapath(input logic clk, reset, MemRead, MemWrite,
+                input logic [1:0] MemToReg,
+                 input logic RegWrite, PCSrc,
 				input logic [3:0] ALUOp,
 				output logic [7:0] Op);
-
 
 
 	logic [6:0]PC;
@@ -27,12 +27,12 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 	// You may refer to the first field in the structure as IfId.instruction for example
 	struct {
 		logic [31:0] instruction;
-		logic [31:0] PCincremented;
+		logic [6:0] PCincremented;
 	} IfId;
 
 	always @ (posedge clk) begin
 		IfId.instruction <= instmem_data[31:0];
-		IfId.PCincremented <= PC+4;   //PC de olabilir
+		IfId.PCincremented <= PC+6'b100;   //PC de olabilir
 	end
 
 	//decode
@@ -52,9 +52,17 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 	assign da = RF[IfId.instruction[26:22]] ;
 	assign db = RF[IfId.instruction[21:17]] ;
 
-	assign RF_WriteData= (MemWb.MemToReg) ? MemWb.datamem_data : MemWb.Alu1out;
+    always_comb
+        case(MemToReg)
+            2'b00: RF_WriteData = MemWb.datamem_data;
+            2'b01: RF_WriteData = MemWb.Alu1out;
+            2'b10: RF_WriteData = {{(25){1'b0}},MemWb.PCincremented};
+            default: RF_WriteData = MemWb.datamem_data;
+         endcase
 
-	assign RF_WriteAddr = MemWb.rd;
+//	assign RF_WriteData = (MemWb.MemToReg) ? MemWb.datamem_data : MemWb.Alu1out;
+
+	assign RF_WriteAddr = {{(27){1'b0}},MemWb.rd};
 
 	always @(posedge clk) begin
 		if (MemWb.RegWrite) begin
@@ -63,15 +71,13 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 	end
 
 	struct {
-	    //control signals
-		logic RegDst;
 		logic [1:0] ALUSrc;
 	    logic [3:0] ALUOp;
+		logic [1:0]MemToReg;
 		logic MemRead;
 		logic MemWrite;
-		logic MemToReg;
 		logic RegWrite;
-		logic [31:0] PCincremented;
+		logic [6:0] PCincremented;
 		logic [31:0] da;
 		logic [31:0] db;
 		logic [31:0] signextend;
@@ -81,7 +87,6 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 	} IdEx;
 
 	always @ (posedge clk) begin
-		IdEx.RegDst <=  RegDst;
 		IdEx.ALUSrc <= ALUSrc;
 		IdEx.ALUOp <= ALUOp;
 		IdEx.MemRead <= MemRead;
@@ -111,9 +116,8 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 		case(ALUSrc)
 			2'b00: alu1in_b = IdEx.db;
 			2'b01: alu1in_b = IdEx.signextend;
-			2'b10: alu1in_b = IdEx.shamt;
-			default: alu1in_b = IdEx.db;
-		endcase
+			2'b10: alu1in_b = {{(23){1'b1}},IdEx.shamt};
+			default: alu1in_b = IdEx.db; endcase
 	end
 
 	always_comb begin
@@ -136,10 +140,11 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 
 	struct {
 	    //control signals
+		logic [6:0] PCincremented;
 		logic MemRead;
 		logic MemWrite;
 		logic RegWrite;
-		logic MemToReg;
+		logic [1:0] MemToReg;
 		logic [31:0] Alu1out;
 		logic [31:0] db;
 		logic [4:0] rd;
@@ -147,6 +152,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 
 	//ex/mem
 	always @ (posedge clk) begin
+        ExMem.PCincremented <= IdEx.PCincremented;
 		ExMem.MemRead <= IdEx.MemRead;
 		ExMem.MemWrite <= IdEx.MemWrite;
 		ExMem.RegWrite <= IdEx.RegWrite;
@@ -162,8 +168,9 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 	//memwb
 	struct {
 	    //control signals
+		logic [6:0] PCincremented;
 		logic RegWrite;
-		logic MemToReg;
+		logic [1:0]MemToReg;
 		logic [31:0] datamem_data;
 		logic [31:0] Alu1out;
 		logic [4:0] rd;
@@ -171,6 +178,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 
 	//ex/mem
 	always @ (posedge clk) begin
+        MemWb.PCincremented <= ExMem.PCincremented;
 		MemWb.RegWrite <= ExMem.RegWrite;
 		MemWb.MemToReg <= ExMem.MemToReg;
 		MemWb.datamem_data <= datamem_data;
@@ -196,9 +204,9 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 
 	// Instruction Memory Read Logic
 	assign instmem_data[31:24] = instmem[instmem_address];
-	assign instmem_data[23:16] = instmem[instmem_address+2'b1];
-	assign instmem_data[15:8] = instmem[instmem_address+2'b10];
-	assign instmem_data[7:0] = instmem[instmem_address+2'b11];
+	assign instmem_data[23:16] = instmem[instmem_address+7'b1];
+	assign instmem_data[15:8] = instmem[instmem_address+7'b10];
+	assign instmem_data[7:0] = instmem[instmem_address+7'b11];
 
 	// Data	Memory Address
 	assign datamem_address = ExMem.Alu1out[6:0];
@@ -225,7 +233,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite, MemToReg,
 		if(reset)
 			PC <= PCSTART;
 		else
-			PC <= (PCSrc) ? JumpAddress[6:0]:PC+3'b100;
+			PC <= (PCSrc) ? JumpAddress[6:0]:PC+7'b100;
 	end
 
 	// ... rest is yours
