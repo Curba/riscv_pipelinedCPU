@@ -686,7 +686,7 @@ VL_INLINE_OPT void Vtop___024root___sequent__TOP__0(Vtop___024root* vlSelf) {
             } else if ((0x19U != (IData)(vlSelf->Op))) {
                 vlSelf->top__DOT__MemToReg = ((0x31U 
                                                == (IData)(vlSelf->Op))
-                                               ? 1U
+                                               ? 0U
                                                : ((4U 
                                                    == (IData)(vlSelf->Op))
                                                    ? 2U

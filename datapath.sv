@@ -60,8 +60,6 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
             default: RF_WriteData = MemWb.datamem_data;
          endcase
 
-//	assign RF_WriteData = (MemWb.MemToReg) ? MemWb.datamem_data : MemWb.Alu1out;
-
 	assign RF_WriteAddr = {{(27){1'b0}},MemWb.rd};
 
 	always @(posedge clk) begin
@@ -135,9 +133,6 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		endcase
 	end
 
-	//assign Left_mux = (PCSrc) ? JumpAddress:PC+4;
-
-
 	struct packed{
 	    //control signals
 		logic [6:0] PCincremented;
@@ -161,9 +156,6 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		ExMem.db <= IdEx.db;
 		ExMem.rd <= IdEx.rd;
 	end
-
-
-
 
 	//memwb
 	struct packed{
@@ -237,8 +229,6 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		else
 			PC <= (PCSrc) ? JumpAddress[6:0]:PC+7'b100;
 	end
-
-	// ... rest is yours
 
 endmodule
 

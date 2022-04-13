@@ -58,7 +58,7 @@ module control( input logic [7:0]Op,
             //LW
             8'b00110001: begin
                 MemRead = 1'b1;
-                MemToReg = 2'b01;
+                MemToReg = 2'b00;
                 RegWrite = 1'b1;
                 RbSelect = 1'b1;
                 AluSrc = 2'b01;
