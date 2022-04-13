@@ -52,7 +52,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	assign db = RF[IfId.instruction[21:17]] ;
 
     always_comb
-        case(MemToReg)
+        case(MemWb.MemToReg)
             2'b00: RF_WriteData = MemWb.datamem_data;
             2'b01: RF_WriteData = MemWb.Alu1out;
             2'b10: RF_WriteData = {{(25){1'b0}},MemWb.PCincremented};
@@ -112,7 +112,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 
 	always_comb begin
-		case(ALUSrc)
+		case(IdEx.ALUSrc)
 			2'b00: alu1in_b = IdEx.db;
 			2'b01: alu1in_b = IdEx.signextend;
 			2'b10: alu1in_b = {{(23){1'b1}},IdEx.shamt};
@@ -120,7 +120,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	end
 
 	always_comb begin
-		case(ALUOp)
+		case(IdEx.ALUOp)
 			4'b0000: Alu1out = alu1in_a + alu1in_b;
 			4'b0001: Alu1out = alu1in_a - alu1in_b;
 			4'b0010: Alu1out = alu1in_a * alu1in_b;
@@ -194,9 +194,9 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	// this will read the .dat file in the same directory
 	// and initialize the memory accordingly.
 	initial
-		$readmemh("C:/Users/baris/Desktop/datapathtest/instruction_memory.dat", instmem);
+		$readmemh("instruction_memory.dat", instmem);
 	initial
-		$readmemh("C:/Users/baris/Desktop/datapathtest/data_memory.dat", datamem);
+		$readmemh("data_memory.dat", datamem);
 
 	// Instruction Memory Address
 	assign instmem_address = PC;

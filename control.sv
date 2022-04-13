@@ -14,6 +14,7 @@ module control( input logic [7:0]Op,
         RegWrite = 1'b0;
         AluSrc = 2'b00;
         AluOp = 4'b0000;
+        PCSrc = 1'b0;
         case(Op)
             //NOP
             default: begin
@@ -35,6 +36,13 @@ module control( input logic [7:0]Op,
             8'b00011000: begin
                 RegWrite = 1'b0;
                 AluOp = 4'b0010;
+            end
+
+            //ADDI
+            8'b00000011: begin
+                RegWrite = 1'b1;
+                AluSrc = 2'b01;
+                AluOp = 4'b0000;
             end
 
             //SW
