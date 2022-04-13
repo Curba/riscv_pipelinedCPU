@@ -80,13 +80,17 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd* trace
                                   [(0x1fU & (IData)(
                                                     (vlSelf->top__DOT__datapath__DOT__IfId 
                                                      >> 0x18U)))]),32);
-        tracep->chgIData(oldp+48,(((0U == (IData)(vlSelf->top__DOT__MemToReg))
+        tracep->chgIData(oldp+48,(((0U == (3U & (vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
+                                                 >> 5U)))
                                     ? ((vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
                                         << 0x1bU) | 
                                        (vlSelf->top__DOT__datapath__DOT__MemWb[1U] 
                                         >> 5U)) : (
                                                    (1U 
-                                                    == (IData)(vlSelf->top__DOT__MemToReg))
+                                                    == 
+                                                    (3U 
+                                                     & (vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
+                                                        >> 5U)))
                                                     ? 
                                                    ((vlSelf->top__DOT__datapath__DOT__MemWb[1U] 
                                                      << 0x1bU) 
@@ -94,7 +98,10 @@ void Vtop___024root__trace_chg_sub_0(Vtop___024root* vlSelf, VerilatedVcd* trace
                                                        >> 5U))
                                                     : 
                                                    ((2U 
-                                                     == (IData)(vlSelf->top__DOT__MemToReg))
+                                                     == 
+                                                     (3U 
+                                                      & (vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
+                                                         >> 5U)))
                                                      ? 
                                                     (0x7fU 
                                                      & (vlSelf->top__DOT__datapath__DOT__MemWb[2U] 

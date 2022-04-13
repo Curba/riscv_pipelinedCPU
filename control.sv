@@ -40,6 +40,7 @@ module control( input logic [7:0]Op,
 
             //ADDI
             8'b00000011: begin
+                MemToReg = 2'b01;
                 RegWrite = 1'b1;
                 AluSrc = 2'b01;
                 AluOp = 4'b0000;

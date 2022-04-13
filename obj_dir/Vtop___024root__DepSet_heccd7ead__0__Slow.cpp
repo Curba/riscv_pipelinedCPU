@@ -244,17 +244,29 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                      | (vlSelf->top__DOT__datapath__DOT__IdEx[2U] 
                                                         >> 0xeU)) 
                                                     + vlSelf->top__DOT__datapath__DOT__alu1in_b)))));
-    vlSelf->top__DOT__PCSrc = 0U;
+    vlSelf->top__DOT__MemWrite = 0U;
     if ((8U != (IData)(vlSelf->Op))) {
         if ((0x18U != (IData)(vlSelf->Op))) {
             if ((3U != (IData)(vlSelf->Op))) {
+                if ((0x19U == (IData)(vlSelf->Op))) {
+                    vlSelf->top__DOT__MemWrite = 1U;
+                } else if ((0x31U != (IData)(vlSelf->Op))) {
+                    if ((4U != (IData)(vlSelf->Op))) {
+                        vlSelf->top__DOT__MemWrite = 0U;
+                    }
+                }
+                vlSelf->top__DOT__PCSrc = 0U;
                 if ((0x19U != (IData)(vlSelf->Op))) {
                     if ((0x31U != (IData)(vlSelf->Op))) {
                         vlSelf->top__DOT__PCSrc = (4U 
                                                    == (IData)(vlSelf->Op));
                     }
                 }
+            } else {
+                vlSelf->top__DOT__PCSrc = 0U;
             }
+        } else {
+            vlSelf->top__DOT__PCSrc = 0U;
         }
         vlSelf->top__DOT__ALUOp = 0U;
         if ((0x18U == (IData)(vlSelf->Op))) {
@@ -268,45 +280,35 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                 }
             }
         }
-        vlSelf->top__DOT__MemWrite = 0U;
+        vlSelf->top__DOT__MemRead = 0U;
         if ((0x18U != (IData)(vlSelf->Op))) {
             if ((3U != (IData)(vlSelf->Op))) {
-                if ((0x19U == (IData)(vlSelf->Op))) {
-                    vlSelf->top__DOT__MemWrite = 1U;
-                } else if ((0x31U != (IData)(vlSelf->Op))) {
-                    if ((4U != (IData)(vlSelf->Op))) {
-                        vlSelf->top__DOT__MemWrite = 0U;
-                    }
-                }
-                vlSelf->top__DOT__MemRead = 0U;
                 if ((0x19U != (IData)(vlSelf->Op))) {
                     if ((0x31U == (IData)(vlSelf->Op))) {
                         vlSelf->top__DOT__MemRead = 1U;
-                        vlSelf->top__DOT__MemToReg = 0U;
-                        vlSelf->top__DOT__MemToReg = 1U;
-                    } else {
-                        if ((4U != (IData)(vlSelf->Op))) {
-                            vlSelf->top__DOT__MemRead = 0U;
-                        }
-                        vlSelf->top__DOT__MemToReg = 0U;
-                        vlSelf->top__DOT__MemToReg 
-                            = ((4U == (IData)(vlSelf->Op))
-                                ? 2U : 0U);
+                    } else if ((4U != (IData)(vlSelf->Op))) {
+                        vlSelf->top__DOT__MemRead = 0U;
                     }
-                } else {
-                    vlSelf->top__DOT__MemToReg = 0U;
                 }
-            } else {
-                vlSelf->top__DOT__MemRead = 0U;
-                vlSelf->top__DOT__MemToReg = 0U;
+            }
+            vlSelf->top__DOT__MemToReg = 0U;
+            if ((3U == (IData)(vlSelf->Op))) {
+                vlSelf->top__DOT__MemToReg = 1U;
+            } else if ((0x19U != (IData)(vlSelf->Op))) {
+                vlSelf->top__DOT__MemToReg = ((0x31U 
+                                               == (IData)(vlSelf->Op))
+                                               ? 1U
+                                               : ((4U 
+                                                   == (IData)(vlSelf->Op))
+                                                   ? 2U
+                                                   : 0U));
             }
         } else {
-            vlSelf->top__DOT__MemRead = 0U;
             vlSelf->top__DOT__MemToReg = 0U;
         }
     } else {
+        vlSelf->top__DOT__PCSrc = 0U;
         vlSelf->top__DOT__ALUOp = 0U;
-        vlSelf->top__DOT__MemWrite = 0U;
         vlSelf->top__DOT__MemRead = 0U;
         vlSelf->top__DOT__MemToReg = 0U;
     }

@@ -181,7 +181,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		MemWb.RegWrite <= ExMem.RegWrite;
 		MemWb.MemToReg <= ExMem.MemToReg;
 		MemWb.datamem_data <= datamem_data;
-		MemWb.Alu1out <= Alu1out;
+		MemWb.Alu1out <= ExMem.Alu1out;
 		MemWb.rd <= ExMem.rd;
 
 	end

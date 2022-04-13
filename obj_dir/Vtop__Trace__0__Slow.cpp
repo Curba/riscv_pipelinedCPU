@@ -164,16 +164,20 @@ VL_ATTR_COLD void Vtop___024root__trace_full_sub_0(Vtop___024root* vlSelf, Veril
     tracep->fullIData(oldp+48,(vlSelf->top__DOT__datapath__DOT__RF
                                [(0x1fU & (IData)((vlSelf->top__DOT__datapath__DOT__IfId 
                                                   >> 0x18U)))]),32);
-    tracep->fullIData(oldp+49,(((0U == (IData)(vlSelf->top__DOT__MemToReg))
+    tracep->fullIData(oldp+49,(((0U == (3U & (vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
+                                              >> 5U)))
                                  ? ((vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
                                      << 0x1bU) | (vlSelf->top__DOT__datapath__DOT__MemWb[1U] 
                                                   >> 5U))
-                                 : ((1U == (IData)(vlSelf->top__DOT__MemToReg))
+                                 : ((1U == (3U & (vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
+                                                  >> 5U)))
                                      ? ((vlSelf->top__DOT__datapath__DOT__MemWb[1U] 
                                          << 0x1bU) 
                                         | (vlSelf->top__DOT__datapath__DOT__MemWb[0U] 
                                            >> 5U)) : 
-                                    ((2U == (IData)(vlSelf->top__DOT__MemToReg))
+                                    ((2U == (3U & (
+                                                   vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
+                                                   >> 5U)))
                                       ? (0x7fU & (vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
                                                   >> 8U))
                                       : ((vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
