@@ -36,7 +36,7 @@ VL_MODULE(Vtop___024root) {
     VlUnpacked<CData/*7:0*/, 128> top__DOT__datapath__DOT__instmem;
     VlUnpacked<CData/*7:0*/, 128> top__DOT__datapath__DOT__datamem;
     VlUnpacked<IData/*31:0*/, 32> top__DOT__datapath__DOT__RF;
-    VlUnpacked<CData/*0:0*/, 2> __Vm_traceActivity;
+    VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
 
     // INTERNAL VARIABLES
     Vtop__Syms* vlSymsp;  // Symbol table

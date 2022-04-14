@@ -62,7 +62,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 	assign RF_WriteAddr = {{(27){1'b0}},MemWb.rd};
 
-	always @(posedge clk) begin
+	always @(negedge clk) begin
 		if (MemWb.RegWrite) begin
 			RF[RF_WriteAddr] <= RF_WriteData;
 		end
