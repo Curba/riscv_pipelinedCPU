@@ -4,6 +4,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 				input logic [3:0] ALUOp,
                 input logic [1:0] ALUSrc,
                 input logic RbSelect,
+                input logic ALUOp2,
 				output logic [7:0] Op);
 
 
@@ -21,7 +22,6 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	logic [6:0] datamem_address;
     logic [31:0] datamem_data;
     logic [31:0] datamem_write_data;
-	// ... may have other logic signal declarations here
 
 	// IF/ID Pipeline staging register fields can be represented using structure format of System Verilog
 	// You may refer to the first field in the structure as IfId.instruction for example
@@ -32,7 +32,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 	always @ (posedge clk) begin
 		IfId.instruction <= instmem_data[31:0];
-		IfId.PCincremented <= PC+6'b100;   //PC de olabilir
+		IfId.PCincremented <= PC+6'b100;
 	end
 
 	//decode
@@ -43,19 +43,21 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 
 	// Register File description
 	logic [31:0] RF[31:0];
-	logic [31:0] da; //read data 1
-	logic [31:0] db; //read data 2
-	logic [31:0] RF_WriteData; // write data
-	logic [31:0] RF_WriteAddr; //write address
+	logic [31:0] da;            //Read Ra
+	logic [31:0] db;            //Read Rb
+	logic [31:0] dc;            //Read Rb
+	logic [31:0] RF_WriteData;  //Write data
+	logic [31:0] RF_WriteAddr;  //Write address
 
-	//register logic
+	// Register Logic
 	assign da = RF[IfId.instruction[26:22]] ;
 	assign db = (RbSelect)? RF[IfId.instruction[31:27]]:RF[IfId.instruction[21:17]] ;
+    assign dc = RF[IfId.instruction[16:12]];
 
     always_comb
         case(MemWb.MemToReg)
             2'b00: RF_WriteData = MemWb.datamem_data;
-            2'b01: RF_WriteData = MemWb.Alu1out;
+            2'b01: RF_WriteData = MemWb.Alu2out;
             2'b10: RF_WriteData = {{(25){1'b0}},MemWb.PCincremented};
             default: RF_WriteData = MemWb.datamem_data;
          endcase
@@ -71,6 +73,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	struct packed{
 		logic [1:0] ALUSrc;
 	    logic [3:0] ALUOp;
+	    logic ALUOp2;
 		logic [1:0]MemToReg;
 		logic MemRead;
 		logic MemWrite;
@@ -78,15 +81,16 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		logic [6:0] PCincremented;
 		logic [31:0] da;
 		logic [31:0] db;
+		logic [31:0] dc;
 		logic [31:0] signextend;
 		logic [4:0] rd;
 		logic [8:0] shamt;
-
 	} IdEx;
 
 	always @ (posedge clk) begin
 		IdEx.ALUSrc <= ALUSrc;
 		IdEx.ALUOp <= ALUOp;
+		IdEx.ALUOp2 <= ALUOp2;
 		IdEx.MemRead <= MemRead;
 		IdEx.MemWrite <= MemWrite;
 		IdEx.MemToReg <= MemToReg;
@@ -94,21 +98,18 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		IdEx.PCincremented <= IfId.PCincremented;
 		IdEx.da	<= da;
 		IdEx.db	<= db;
+		IdEx.dc	<= dc;
 		IdEx.shamt <= IfId.instruction[16:8];
 		IdEx.rd <= IfId.instruction[31:27];
 		IdEx.signextend <= { {(18){IfId.instruction [21]}},IfId.instruction [21:8] };
-
-
 	end
 
-	//execute logic
+	// Execute Stage Variables
 	logic [31:0] alu1in_a;
 	logic [31:0] alu1in_b;
 	logic [31:0] Alu1out;
 
 	assign alu1in_a = IdEx.da;
-
-
 
 	always_comb begin
 		case(IdEx.ALUSrc)
@@ -134,18 +135,19 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 	end
 
 	struct packed{
-	    //control signals
 		logic [6:0] PCincremented;
 		logic MemRead;
 		logic MemWrite;
 		logic RegWrite;
+        logic ALUOp2;
 		logic [1:0] MemToReg;
 		logic [31:0] Alu1out;
 		logic [31:0] db;
+		logic [31:0] dc;
 		logic [4:0] rd;
 	} ExMem;
 
-	//ex/mem
+	// Ex Mem Stage
 	always @ (posedge clk) begin
         ExMem.PCincremented <= IdEx.PCincremented;
 		ExMem.MemRead <= IdEx.MemRead;
@@ -153,10 +155,25 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		ExMem.RegWrite <= IdEx.RegWrite;
 		ExMem.MemToReg <= IdEx.MemToReg;
 		ExMem.Alu1out <= Alu1out;
+        ExMem.ALUOp2 <= IdEx.ALUOp2;
 		ExMem.db <= IdEx.db;
+		ExMem.dc <= IdEx.dc;
 		ExMem.rd <= IdEx.rd;
 	end
 
+	logic [31:0] alu2in_a;
+	logic [31:0] alu2in_b;
+	logic [31:0] Alu2out;
+
+    assign alu2in_a = ExMem.Alu1out;
+    assign alu2in_b = ExMem.dc;
+
+	always_comb begin
+		case(ExMem.ALUOp2)
+			1'b0: Alu2out = alu2in_a;
+			1'b1: Alu2out = alu2in_a + alu2in_b;
+		endcase
+	end
 	//memwb
 	struct packed{
 	    //control signals
@@ -164,7 +181,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		logic RegWrite;
 		logic [1:0]MemToReg;
 		logic [31:0] datamem_data;
-		logic [31:0] Alu1out;
+		logic [31:0] Alu2out;
 		logic [4:0] rd;
 	} MemWb;
 
@@ -174,7 +191,7 @@ module datapath(input logic clk, reset, MemRead, MemWrite,
 		MemWb.RegWrite <= ExMem.RegWrite;
 		MemWb.MemToReg <= ExMem.MemToReg;
 		MemWb.datamem_data <= datamem_data;
-		MemWb.Alu1out <= ExMem.Alu1out;
+		MemWb.Alu2out <= Alu2out;
 		MemWb.rd <= ExMem.rd;
 
 	end

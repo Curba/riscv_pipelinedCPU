@@ -4,6 +4,7 @@ module control( input logic [7:0]Op,
 		output logic PCSrc,
 		output logic MemRead,
 		output logic MemWrite,
+        output logic AluOp2,
         output logic RbSelect,
 		output logic [1:0] MemToReg,
 		output logic RegWrite );
@@ -16,6 +17,7 @@ module control( input logic [7:0]Op,
         RbSelect = 1'b0;
         AluSrc = 2'b00;
         AluOp = 4'b0000;
+        AluOp2 = 1'b0;
         PCSrc = 1'b0;
         case(Op)
             //NOP
@@ -71,6 +73,13 @@ module control( input logic [7:0]Op,
                 MemToReg = 2'b10;
                 RegWrite = 1'b1;
                 PCSrc = 1'b1;
+            end
+
+            8'b00000111: begin
+                MemToReg = 2'b01;
+                RegWrite = 1'b1;
+                AluOp = 4'b0010;
+                AluOp2 = 1'b1;
             end
 
         endcase
