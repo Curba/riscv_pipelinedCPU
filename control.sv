@@ -31,12 +31,14 @@ module control( input logic [7:0]Op,
 
             //ADD
             8'b00001000: begin
+                MemToReg = 2'b01;
                 RegWrite = 1'b1;
             end
 
             //MUL
             8'b00011000: begin
-                RegWrite = 1'b0;
+                MemToReg = 2'b01;
+                RegWrite = 1'b1;
                 AluOp = 4'b0010;
             end
 

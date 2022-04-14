@@ -299,40 +299,40 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
             } else {
                 vlSelf->top__DOT__MemRead = 0U;
             }
-            vlSelf->top__DOT__MemToReg = 0U;
-            if ((3U == (IData)(vlSelf->Op))) {
-                vlSelf->top__DOT__MemToReg = 1U;
-            } else if ((0x19U != (IData)(vlSelf->Op))) {
-                vlSelf->top__DOT__MemToReg = ((0x31U 
-                                               == (IData)(vlSelf->Op))
-                                               ? 0U
-                                               : ((4U 
-                                                   == (IData)(vlSelf->Op))
-                                                   ? 2U
-                                                   : 0U));
-            }
         } else {
             vlSelf->top__DOT__MemWrite = 0U;
             vlSelf->top__DOT__MemRead = 0U;
-            vlSelf->top__DOT__MemToReg = 0U;
         }
     } else {
         vlSelf->top__DOT__ALUOp = 0U;
         vlSelf->top__DOT__ALUSrc = 0U;
         vlSelf->top__DOT__MemWrite = 0U;
         vlSelf->top__DOT__MemRead = 0U;
-        vlSelf->top__DOT__MemToReg = 0U;
     }
-    vlSelf->top__DOT__RegWrite = 0U;
+    vlSelf->top__DOT__MemToReg = 0U;
     if ((8U == (IData)(vlSelf->Op))) {
+        vlSelf->top__DOT__MemToReg = 1U;
+        vlSelf->top__DOT__RegWrite = 0U;
         vlSelf->top__DOT__RegWrite = 1U;
     } else if ((0x18U == (IData)(vlSelf->Op))) {
+        vlSelf->top__DOT__MemToReg = 1U;
         vlSelf->top__DOT__RegWrite = 0U;
+        vlSelf->top__DOT__RegWrite = 1U;
     } else if ((3U == (IData)(vlSelf->Op))) {
+        vlSelf->top__DOT__MemToReg = 1U;
+        vlSelf->top__DOT__RegWrite = 0U;
         vlSelf->top__DOT__RegWrite = 1U;
     } else if ((0x19U != (IData)(vlSelf->Op))) {
+        vlSelf->top__DOT__MemToReg = ((0x31U == (IData)(vlSelf->Op))
+                                       ? 0U : ((4U 
+                                                == (IData)(vlSelf->Op))
+                                                ? 2U
+                                                : 0U));
+        vlSelf->top__DOT__RegWrite = 0U;
         vlSelf->top__DOT__RegWrite = ((0x31U == (IData)(vlSelf->Op)) 
                                       | (4U == (IData)(vlSelf->Op)));
+    } else {
+        vlSelf->top__DOT__RegWrite = 0U;
     }
     vlSelf->top__DOT__RbSelect = 0U;
     if ((8U != (IData)(vlSelf->Op))) {
