@@ -75,6 +75,17 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                      << 0x1bU) 
                                                     | (vlSelf->top__DOT__datapath__DOT__MemWb[1U] 
                                                        >> 5U)))));
+    vlSelf->top__DOT__datapath__DOT__datamem_write_data 
+        = (((0U != (0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U])) 
+            & ((0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U]) 
+               == (0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
+                            >> 0x16U)))) ? ((vlSelf->top__DOT__datapath__DOT__MemWb[1U] 
+                                             << 0x1bU) 
+                                            | (vlSelf->top__DOT__datapath__DOT__MemWb[0U] 
+                                               >> 5U))
+            : ((vlSelf->top__DOT__datapath__DOT__ExMem[2U] 
+                << 5U) | (vlSelf->top__DOT__datapath__DOT__ExMem[1U] 
+                          >> 0x1bU)));
     vlSelf->top__DOT__datapath__DOT__branch_src = (
                                                    (1U 
                                                     & (((IData)(
@@ -195,7 +206,7 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                   != 
                                                   (0x1fU 
                                                    & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                      >> 0x14U)))) 
+                                                      >> 0x15U)))) 
                                               & ((0x1fU 
                                                   & vlSelf->top__DOT__datapath__DOT__MemWb[0U]) 
                                                  == 
@@ -218,27 +229,26 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
         ((((vlSelf->top__DOT__datapath__DOT__ExMem[3U] 
             >> 0x1eU) & (0U != (0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
                                          >> 0x16U)))) 
-          & (((0U != (3U & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
-                            >> 0xeU))) & ((0x1fU & 
-                                           (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
-                                            >> 0x16U)) 
-                                          == (0x1fU 
-                                              & ((vlSelf->top__DOT__datapath__DOT__IdEx[6U] 
-                                                  << 2U) 
-                                                 | (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                    >> 0x1eU))))) 
+          & ((((0U == (3U & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
+                             >> 0xeU))) | (~ vlSelf->top__DOT__datapath__DOT__IdEx[0U])) 
+              & ((0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
+                           >> 0x16U)) == (0x1fU & (
+                                                   (vlSelf->top__DOT__datapath__DOT__IdEx[6U] 
+                                                    << 1U) 
+                                                   | (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
+                                                      >> 0x1fU))))) 
              | ((0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
                           >> 0x16U)) == (0x1fU & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                  >> 0x19U)))))
+                                                  >> 0x1aU)))))
           ? 2U : (((((vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
                       >> 7U) & (0U != (0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U]))) 
                     & ((0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
                                  >> 0x16U)) != (0x1fU 
                                                 & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                   >> 0x19U)))) 
+                                                   >> 0x1aU)))) 
                    & ((0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U]) 
                       == (0x1fU & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                   >> 0x19U)))) ? 1U
+                                   >> 0x1aU)))) ? 1U
                    : 0U));
     vlSelf->top__DOT__datapath__DOT__alu1in_b = ((0U 
                                                   == (IData)(vlSelf->top__DOT__datapath__DOT__ForwardingB))
@@ -247,38 +257,38 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                    == 
                                                    (3U 
                                                     & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                       >> 0x12U)))
+                                                       >> 0x13U)))
                                                    ? 
                                                   ((vlSelf->top__DOT__datapath__DOT__IdEx[3U] 
-                                                    << 6U) 
+                                                    << 5U) 
                                                    | (vlSelf->top__DOT__datapath__DOT__IdEx[2U] 
-                                                      >> 0x1aU))
+                                                      >> 0x1bU))
                                                    : 
                                                   ((1U 
                                                     == 
                                                     (3U 
                                                      & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                        >> 0x12U)))
+                                                        >> 0x13U)))
                                                     ? 
                                                    ((vlSelf->top__DOT__datapath__DOT__IdEx[1U] 
-                                                     << 6U) 
+                                                     << 5U) 
                                                     | (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                       >> 0x1aU))
+                                                       >> 0x1bU))
                                                     : 
                                                    ((2U 
                                                      == 
                                                      (3U 
                                                       & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                         >> 0x12U)))
+                                                         >> 0x13U)))
                                                      ? 
                                                     (0x1fU 
                                                      & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                        >> 0x10U))
+                                                        >> 0x11U))
                                                      : 
                                                     ((vlSelf->top__DOT__datapath__DOT__IdEx[3U] 
-                                                      << 6U) 
+                                                      << 5U) 
                                                      | (vlSelf->top__DOT__datapath__DOT__IdEx[2U] 
-                                                        >> 0x1aU)))))
+                                                        >> 0x1bU)))))
                                                   : 
                                                  ((1U 
                                                    == (IData)(vlSelf->top__DOT__datapath__DOT__ForwardingB))
@@ -300,39 +310,38 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
         ((((vlSelf->top__DOT__datapath__DOT__ExMem[3U] 
             >> 0x1eU) & (0U != (0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
                                          >> 0x16U)))) 
-          & (((0U != (3U & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
-                            >> 0xeU))) & ((0x1fU & 
-                                           (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
-                                            >> 0x16U)) 
-                                          == (0x1fU 
-                                              & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                 >> 0x19U)))) 
+          & ((((0U == (3U & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
+                             >> 0xeU))) | (~ vlSelf->top__DOT__datapath__DOT__IdEx[0U])) 
+              & ((0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
+                           >> 0x16U)) == (0x1fU & (
+                                                   vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
+                                                   >> 0x1aU)))) 
              | ((0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
                           >> 0x16U)) == (0x1fU & ((
                                                    vlSelf->top__DOT__datapath__DOT__IdEx[6U] 
-                                                   << 2U) 
+                                                   << 1U) 
                                                   | (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                     >> 0x1eU))))))
+                                                     >> 0x1fU))))))
           ? 2U : (((((vlSelf->top__DOT__datapath__DOT__MemWb[2U] 
                       >> 7U) & (0U != (0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U]))) 
                     & ((0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
                                  >> 0x16U)) != (0x1fU 
                                                 & ((vlSelf->top__DOT__datapath__DOT__IdEx[6U] 
-                                                    << 2U) 
+                                                    << 1U) 
                                                    | (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                      >> 0x1eU))))) 
+                                                      >> 0x1fU))))) 
                    & ((0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U]) 
                       == (0x1fU & ((vlSelf->top__DOT__datapath__DOT__IdEx[6U] 
-                                    << 2U) | (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                              >> 0x1eU)))))
+                                    << 1U) | (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
+                                              >> 0x1fU)))))
                    ? 1U : 0U));
     vlSelf->top__DOT__datapath__DOT__alu1in_a = ((0U 
                                                   == (IData)(vlSelf->top__DOT__datapath__DOT__ForwardingA))
                                                   ? 
                                                  ((vlSelf->top__DOT__datapath__DOT__IdEx[4U] 
-                                                   << 6U) 
+                                                   << 5U) 
                                                   | (vlSelf->top__DOT__datapath__DOT__IdEx[3U] 
-                                                     >> 0x1aU))
+                                                     >> 0x1bU))
                                                   : 
                                                  ((1U 
                                                    == (IData)(vlSelf->top__DOT__datapath__DOT__ForwardingA))
@@ -375,30 +384,22 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
         [__Vtableidx1];
     vlSelf->top__DOT__PCSrc = Vtop__ConstPool__TABLE_hdc11e6d5_0
         [__Vtableidx1];
-    vlSelf->top__DOT__datapath__DOT__datamem_write_data 
-        = (((0U != (0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U])) 
-            & ((0x1fU & vlSelf->top__DOT__datapath__DOT__MemWb[0U]) 
-               == (0x1fU & (vlSelf->top__DOT__datapath__DOT__ExMem[0U] 
-                            >> 0x16U)))) ? vlSelf->top__DOT__datapath__DOT__Alu2out
-            : ((vlSelf->top__DOT__datapath__DOT__ExMem[2U] 
-                << 5U) | (vlSelf->top__DOT__datapath__DOT__ExMem[1U] 
-                          >> 0x1bU)));
-    vlSelf->top__DOT__datapath__DOT__Alu1out = ((0x20000U 
+    vlSelf->top__DOT__datapath__DOT__Alu1out = ((0x40000U 
                                                  & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                  ? 
-                                                ((0x10000U 
+                                                ((0x20000U 
                                                   & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                   ? 
                                                  (vlSelf->top__DOT__datapath__DOT__alu1in_a 
                                                   + vlSelf->top__DOT__datapath__DOT__alu1in_b)
                                                   : 
-                                                 ((0x8000U 
+                                                 ((0x10000U 
                                                    & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                    ? 
                                                   (vlSelf->top__DOT__datapath__DOT__alu1in_a 
                                                    + vlSelf->top__DOT__datapath__DOT__alu1in_b)
                                                    : 
-                                                  ((0x4000U 
+                                                  ((0x8000U 
                                                     & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                     ? 
                                                    ((vlSelf->top__DOT__datapath__DOT__alu1in_a 
@@ -413,13 +414,13 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                      >> vlSelf->top__DOT__datapath__DOT__alu1in_b)
                                                      : 0U))))
                                                  : 
-                                                ((0x10000U 
+                                                ((0x20000U 
                                                   & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                   ? 
-                                                 ((0x8000U 
+                                                 ((0x10000U 
                                                    & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                    ? 
-                                                  ((0x4000U 
+                                                  ((0x8000U 
                                                     & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                     ? 
                                                    ((0x1fU 
@@ -436,7 +437,7 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                      << vlSelf->top__DOT__datapath__DOT__alu1in_b)
                                                      : 0U))
                                                    : 
-                                                  ((0x4000U 
+                                                  ((0x8000U 
                                                     & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                     ? 
                                                    (vlSelf->top__DOT__datapath__DOT__alu1in_a 
@@ -445,10 +446,10 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                    (vlSelf->top__DOT__datapath__DOT__alu1in_a 
                                                     | vlSelf->top__DOT__datapath__DOT__alu1in_b)))
                                                   : 
-                                                 ((0x8000U 
+                                                 ((0x10000U 
                                                    & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                    ? 
-                                                  ((0x4000U 
+                                                  ((0x8000U 
                                                     & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                     ? 
                                                    (vlSelf->top__DOT__datapath__DOT__alu1in_a 
@@ -457,7 +458,7 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                    (vlSelf->top__DOT__datapath__DOT__alu1in_a 
                                                     * vlSelf->top__DOT__datapath__DOT__alu1in_b))
                                                    : 
-                                                  ((0x4000U 
+                                                  ((0x8000U 
                                                     & vlSelf->top__DOT__datapath__DOT__IdEx[5U])
                                                     ? 
                                                    (vlSelf->top__DOT__datapath__DOT__alu1in_a 
@@ -474,7 +475,7 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                    != (IData)(vlSelf->top__DOT__branch_flag))) 
                                                | (0U 
                                                   != 
-                                                  (0xc000U 
+                                                  (0x18000U 
                                                    & vlSelf->top__DOT__datapath__DOT__IdEx[0U]))) 
                                               | (0U 
                                                  != 
@@ -486,10 +487,10 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                     != 
                                                     (0xfU 
                                                      & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                        >> 6U))) 
+                                                        >> 7U))) 
                                                    & (((0x1fU 
                                                         & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                           >> 0x15U)) 
+                                                           >> 0x16U)) 
                                                        == 
                                                        (0x1fU 
                                                         & (IData)(
@@ -497,7 +498,7 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                                    >> 0x1dU)))) 
                                                       | ((0x1fU 
                                                           & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                             >> 0x15U)) 
+                                                             >> 0x16U)) 
                                                          == 
                                                          (0x1fU 
                                                           & ((IData)(vlSelf->top__DOT__RbSelect)
@@ -512,10 +513,10 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                     != 
                                                     (0xfU 
                                                      & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                        >> 6U))) 
+                                                        >> 7U))) 
                                                    & (((0x1fU 
                                                         & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                           >> 0x15U)) 
+                                                           >> 0x16U)) 
                                                        == 
                                                        (0x1fU 
                                                         & (IData)(
@@ -523,7 +524,7 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                                    >> 0x1dU)))) 
                                                       | ((0x1fU 
                                                           & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                             >> 0x15U)) 
+                                                             >> 0x16U)) 
                                                          == 
                                                          (0x1fU 
                                                           & ((IData)(vlSelf->top__DOT__RbSelect)
@@ -539,10 +540,10 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                       != 
                                                       (0xfU 
                                                        & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                          >> 6U))) 
+                                                          >> 7U))) 
                                                      & (((0x1fU 
                                                           & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                             >> 0x15U)) 
+                                                             >> 0x16U)) 
                                                          == 
                                                          (0x1fU 
                                                           & (IData)(
@@ -550,7 +551,7 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                                      >> 0x1dU)))) 
                                                         | ((0x1fU 
                                                             & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                               >> 0x15U)) 
+                                                               >> 0x16U)) 
                                                            == 
                                                            (0x1fU 
                                                             & ((IData)(vlSelf->top__DOT__RbSelect)
@@ -562,10 +563,11 @@ VL_ATTR_COLD void Vtop___024root___settle__TOP__0(Vtop___024root* vlSelf) {
                                                                            >> 0x18U)))))))));
     if (((((IData)(vlSelf->top__DOT__jump_flag) | (0U 
                                                    != (IData)(vlSelf->top__DOT__branch_flag))) 
-          | (0U != (0xc000U & vlSelf->top__DOT__datapath__DOT__IdEx[0U]))) 
+          | (0U != (0x18000U & vlSelf->top__DOT__datapath__DOT__IdEx[0U]))) 
          | (0U != (0xc000U & vlSelf->top__DOT__datapath__DOT__ExMem[0U])))) {
         vlSelf->top__DOT__datapath__DOT__PCenable = 
-            ((IData)(vlSelf->top__DOT__datapath__DOT__branch_src)
+            (((IData)(vlSelf->top__DOT__jump_flag) 
+              | (IData)(vlSelf->top__DOT__datapath__DOT__branch_src))
               ? 1U : 0U);
     }
 }
@@ -637,7 +639,7 @@ VL_ATTR_COLD void Vtop___024root___ctor_var_reset(Vtop___024root* vlSelf) {
         vlSelf->top__DOT__datapath__DOT__RF[__Vi0] = VL_RAND_RESET_I(32);
     }
     vlSelf->top__DOT__datapath__DOT__RF_WriteData = VL_RAND_RESET_I(32);
-    VL_RAND_RESET_W(195, vlSelf->top__DOT__datapath__DOT__IdEx);
+    VL_RAND_RESET_W(196, vlSelf->top__DOT__datapath__DOT__IdEx);
     vlSelf->top__DOT__datapath__DOT__alu1in_a = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__datapath__DOT__alu1in_b = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__datapath__DOT__Alu1out = VL_RAND_RESET_I(32);
