@@ -15,6 +15,7 @@ module top (
     logic MemSignExtend;
     logic [1:0] branch_flag;
     logic jump_flag;
+    logic double_jump_flag;
 
 
 control ctr(
@@ -30,7 +31,8 @@ control ctr(
     .RbSelect   (RbSelect),
     .MemSignExtend  (MemSignExtend),
     .branch_flag    (branch_flag),
-    .jump_flag      (jump_flag)
+    .jump_flag      (jump_flag),
+    .double_jump_flag  (double_jump_flag)
 );
 
 
@@ -50,7 +52,8 @@ datapath datapath(
     .ALUOp      (ALUOp),
     .ALUOp2     (ALUOp2),
     .RbSelect   (RbSelect),
-    .Op         (Op)
+    .Op         (Op),
+    .double_jump_flag  (double_jump_flag)
 );
 
 endmodule

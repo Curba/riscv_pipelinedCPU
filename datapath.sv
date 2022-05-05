@@ -9,6 +9,7 @@ module datapath(input logic clk, reset,
                 input logic [1:0] ALUSrc,
                 input logic RbSelect,
                 input logic ALUOp2,
+				input logic double_jump_flag,
 				output logic [7:0] Op);
 
 
@@ -93,6 +94,7 @@ module datapath(input logic clk, reset,
 	logic [31:0] dc;            //Read Rb
 	logic [31:0] RF_WriteData;  //Write data
 	logic [31:0] RF_WriteAddr;  //Write address
+	logic double_jump;
 
 	// Register Logic
 	assign da = RF[IfId.instruction[26:22]] ;
@@ -137,6 +139,7 @@ module datapath(input logic clk, reset,
         logic [1:0] branch_flag;
         logic [13:0] branch_addr;
 		logic RbSelect;
+		logic double_jump_flag;
 	} IdEx;
 
 	always @ (posedge clk) begin
@@ -151,6 +154,7 @@ module datapath(input logic clk, reset,
             IdEx.MemSignExtend <= 0;
             IdEx.branch_flag <= 0;
 			IdEx.RbSelect <= 0;
+			IdEx.double_jump_flag <= 0;
         end
         IdEx.MemSignExtend <= MemSignExtend;
 		IdEx.ALUSrc <= ALUSrc;
@@ -173,6 +177,7 @@ module datapath(input logic clk, reset,
         IdEx.rb <= (RbSelect) ? IfId.instruction[31:27]:IfId.instruction[21:17];
         IdEx.rc <= IfId.instruction[16:12];
 		IdEx.RbSelect <= RbSelect;
+		IdEx.double_jump_flag <= double_jump_flag;
 	end
 
 	// Execute Stage Variables
@@ -191,18 +196,18 @@ module datapath(input logic clk, reset,
 	assign idexrb= IdEx.rb;
 	assign exmembranchflag= ExMem.branch_flag;
     always_comb begin
-      if ((ExMem.RegWrite) && (ExMem.rd !=0) && (((ExMem.branch_flag == 0 || IdEx.RbSelect == 0) && ExMem.rd == IdEx.rb) || (ExMem.rd == IdEx.ra)))
+      if ((ExMem.RegWrite)&&(ExMem.rd !=0) && ((ExMem.rd != IdEx.ra && ExMem.rd == IdEx.ra) || (ExMem.branch_flag == 0 && ExMem.rd == IdEx.ra)))
              ForwardingA = 2'b10;
          else if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.ra && MemWb.rd == IdEx.ra)
              ForwardingA = 2'b01;
          else
              ForwardingA = 2'b00;
 
-         if ((ExMem.RegWrite) && (ExMem.rd !=0) && (((ExMem.branch_flag == 0 || IdEx.RbSelect == 0) && ExMem.rd == IdEx.ra) || (ExMem.rd == IdEx.rb)))
+         if ((ExMem.RegWrite)&& (ExMem.rd !=0) && ((ExMem.rd != IdEx.rb && ExMem.rd == IdEx.rb) || (ExMem.branch_flag == 0 && ExMem.rd == IdEx.rb && ExMem.rd == IdEx.ra)))
              ForwardingB = 2'b10;
          else if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.rb && MemWb.rd == IdEx.rb)
-             ForwardingB = 2'b01;
-         else
+            ForwardingB = 2'b01;
+        else
              ForwardingB = 2'b00;
 
         case(ForwardingA)
@@ -272,6 +277,7 @@ module datapath(input logic clk, reset,
         logic zero_flag;
         logic [1:0]branch_flag;
         logic [13:0] branch_addr;
+		logic double_jump_flag;
 	} ExMem;
 
 	// Ex Mem Stage
@@ -291,6 +297,7 @@ module datapath(input logic clk, reset,
         ExMem.zero_flag <= zero_flag;
         ExMem.branch_flag <= IdEx.branch_flag;
         ExMem.branch_addr <= IdEx.branch_addr;
+		ExMem.double_jump_flag <= IdEx.double_jump_flag;
 	end
 
 	logic [31:0] alu2in_a;
@@ -306,6 +313,7 @@ module datapath(input logic clk, reset,
     assign branch_eq = (ExMem.zero_flag == 1 && ExMem.branch_flag[0] == 1 && ExMem.branch_flag[1] == 0) ? 1:0;
     assign branch_ne = (ExMem.zero_flag == 0 && ExMem.branch_flag[1] == 1 && ExMem.branch_flag[0] == 0) ? 1:0;
     assign branch_src = (branch_ne || branch_eq) ? 1:0;
+	assign double_jump = (ExMem.Alu1out == 1 && ExMem.double_jump_flag == 1) ? 1:0;
 
 	always_comb begin
 		case(ExMem.ALUOp2)
@@ -403,6 +411,9 @@ module datapath(input logic clk, reset,
 		if(reset)
 			PC <= PCSTART;
         else if(PCenable)
-		    PC <= (branch_src) ? ExMem.branch_addr[6:0]: (PCSrc ? JumpAddress[6:0]:PC+7'b100);
+		    PC <= (branch_src) ? ExMem.branch_addr[6:0]: (PCSrc ? JumpAddress[6:0]:(double_jump ? PC+7'b1000:PC+7'b100));
+
+		
+
     end
 endmodule

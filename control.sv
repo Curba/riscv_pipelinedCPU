@@ -10,7 +10,9 @@ module control( input logic [7:0]Op,
         output logic AluOp2,
         output logic RbSelect,
 		output logic [1:0] MemToReg,
+        output logic double_jump_flag,
 		output logic RegWrite );
+        
 
     always_comb begin
         MemRead = 4'b0000;
@@ -25,6 +27,7 @@ module control( input logic [7:0]Op,
         AluOp = 4'b0000;
         AluOp2 = 1'b0;
         PCSrc = 1'b0;
+        double_jump_flag = 1'b0;
         case(Op)
             //NOP
             default: begin
@@ -259,6 +262,13 @@ module control( input logic [7:0]Op,
                 MemToReg = 2'b01;
                 RegWrite = 1'b1;
                 AluOp = 4'b0111;
+            end
+
+            //SSLD
+            8'b00111011: begin
+                double_jump_flag = 1'b1;
+                RbSelect = 1'b1;
+                AluOp = 4'b1001;
             end
 
         endcase

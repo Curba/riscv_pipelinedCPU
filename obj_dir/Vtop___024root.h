@@ -27,6 +27,7 @@ VL_MODULE(Vtop___024root) {
     CData/*0:0*/ top__DOT__MemSignExtend;
     CData/*1:0*/ top__DOT__branch_flag;
     CData/*0:0*/ top__DOT__jump_flag;
+    CData/*0:0*/ top__DOT__double_jump_flag;
     CData/*6:0*/ top__DOT__datapath__DOT__PC;
     CData/*1:0*/ top__DOT__datapath__DOT__ForwardingA;
     CData/*1:0*/ top__DOT__datapath__DOT__ForwardingB;
@@ -46,8 +47,8 @@ VL_MODULE(Vtop___024root) {
     IData/*31:0*/ top__DOT__datapath__DOT__Alu1out;
     IData/*31:0*/ top__DOT__datapath__DOT__Alu2out;
     QData/*38:0*/ top__DOT__datapath__DOT__IfId;
-    VlWide<7>/*195:0*/ top__DOT__datapath__DOT__IdEx;
-    VlWide<5>/*142:0*/ top__DOT__datapath__DOT__ExMem;
+    VlWide<7>/*196:0*/ top__DOT__datapath__DOT__IdEx;
+    VlWide<5>/*143:0*/ top__DOT__datapath__DOT__ExMem;
     VlWide<3>/*78:0*/ top__DOT__datapath__DOT__MemWb;
     VlUnpacked<CData/*7:0*/, 128> top__DOT__datapath__DOT__instmem;
     VlUnpacked<CData/*7:0*/, 128> top__DOT__datapath__DOT__datamem;
