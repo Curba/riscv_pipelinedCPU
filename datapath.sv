@@ -371,39 +371,45 @@ module datapath(input logic clk, reset,
 
 	// Data Memory Write Logic
 	always @(posedge clk) begin
-		if (ExMem.MemWrite[0])
+		if (ExMem.MemWrite[3])
 			datamem[datamem_address]   <= datamem_write_data[31:24];
-        if(ExMem.MemWrite[1])
-			datamem[datamem_address+1] <= datamem_write_data[23:16];
         if(ExMem.MemWrite[2])
+			datamem[datamem_address+1] <= datamem_write_data[23:16];
+        if(ExMem.MemWrite[1])
 			datamem[datamem_address+2] <= datamem_write_data[15:8];
-        if(ExMem.MemWrite[3])
+        if(ExMem.MemWrite[0])
 			datamem[datamem_address+3] <= datamem_write_data[7:0];
             $writememh("data_memory.dat", datamem);
 		end
 
 	// Data Memory Read Logic
     always_comb begin
-        datamem_data[7:0]    =   (ExMem.MemRead[0])? datamem[datamem_address+3]:8'bx;
+     datamem_data[7:0]    =   (ExMem.MemRead[0])? datamem[datamem_address+3]:8'bx;
         if(ExMem.MemRead[1] == 0 && ExMem.MemSignExtend)
             datamem_data[15:8] = {(8){datamem_data[7]}};
-        else if (ExMem.MemRead[1])
+         else if (ExMem.MemRead[1])
             datamem_data[15:8] = datamem[datamem_address+2];
+         else
+            datamem_data[15:8] = 8'b0;
 
-        if(ExMem.MemRead[2] == 0 && ExMem.MemSignExtend && ExMem.MemRead[1] == 0)
-            datamem_data[23:16] = {(8){datamem_data[7]}};
-        else if (ExMem.MemRead[2] == 0 && ExMem.MemSignExtend)
-            datamem_data[23:16] = {(8){datamem_data[15]}};
-        else if(ExMem.MemRead[2])
+         if(ExMem.MemRead[2] == 0 && ExMem.MemSignExtend && ExMem.MemRead[1] == 0)
+             datamem_data[23:16] = {(8){datamem_data[7]}};
+         else if (ExMem.MemRead[2] == 0 && ExMem.MemSignExtend)
+             datamem_data[23:16] = {(8){datamem_data[15]}};
+         else if(ExMem.MemRead[2])
             datamem_data[23:16] = datamem[datamem_address+1];
+         else
+             datamem_data[23:16] = 8'b0;
 
-        if(ExMem.MemRead[3] == 0 && ExMem.MemSignExtend && ExMem.MemRead[1] == 0)
-            datamem_data[31:24] = {(8){datamem_data[7]}};
-        else if (ExMem.MemRead[3] == 0 && ExMem.MemSignExtend)
-            datamem_data[31:24] = {(8){datamem_data[15]}};
-        else if(ExMem.MemRead[3])
-            datamem_data[31:24] = datamem[datamem_address];
-    end
+         if(ExMem.MemRead[3] == 0 && ExMem.MemSignExtend && ExMem.MemRead[1] == 0)
+             datamem_data[31:24] = {(8){datamem_data[7]}};
+         else if (ExMem.MemRead[3] == 0 && ExMem.MemSignExtend)
+             datamem_data[31:24] = {(8){datamem_data[15]}};
+         else if(ExMem.MemRead[3])
+             datamem_data[31:24] = datamem[datamem_address];
+         else
+             datamem_data[31:24] = 8'b0;
+     end
 
 	//PC logic
 
@@ -411,7 +417,7 @@ module datapath(input logic clk, reset,
 		if(reset)
 			PC <= PCSTART;
         else if(PCenable)
-		    PC <= (branch_src) ? ExMem.branch_addr[6:0]: (PCSrc ? JumpAddress[6:0]:(double_jump ? PC+7'b1000:PC+7'b100));
+		    PC <= (branch_src) ? ExMem.branch_addr[6:0]: (PCSrc ? JumpAddress[6:0]:(double_jump ? PC+7'b1100:PC+7'b100));
 
 		
 

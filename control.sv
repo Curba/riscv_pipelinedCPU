@@ -248,6 +248,7 @@ module control( input logic [7:0]Op,
                 MemToReg = 2'b01;
                 RegWrite = 1'b1;
                 AluOp = 4'b0110;
+                AluSrc = 2'b10;
             end
 
             //SRL
@@ -255,6 +256,7 @@ module control( input logic [7:0]Op,
                 MemToReg = 2'b01;
                 RegWrite = 1'b1;
                 AluOp = 4'b1000;
+                AluSrc = 2'b10;
             end
 
             //SRA
@@ -262,6 +264,7 @@ module control( input logic [7:0]Op,
                 MemToReg = 2'b01;
                 RegWrite = 1'b1;
                 AluOp = 4'b0111;
+                AluSrc = 2'b10;
             end
 
             //SSLD

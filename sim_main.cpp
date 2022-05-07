@@ -86,7 +86,7 @@ int main(int argc, char** argv, char** env){
       tb->reset();
       clock_count++;
   // Hit that reset button for one clock cycle:
-  for(int x = 0; x < 35; x ++){
+  for(int x = 0; x < 45; x ++){
 
     if (DEBUG) printf("PC: %d   OP: %02x In1: %02x In2: %02x In3: %02x Result: %02x Ra: %02x\n",
             tb->m_topsim->rootp->top__DOT__datapath__DOT__PC,
