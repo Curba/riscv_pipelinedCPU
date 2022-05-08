@@ -22,6 +22,7 @@
 #define ALUSrc          top__DOT_ALUSrc
 #define RbSelect        top__DOT_RbSelect
 #define datamem         top__DOT__datapath__DOT__datamem
+#define IdEx              top__DOT__datapath__DOT__IdEx
 #define RF              top__DOT__datapath__DOT__RF
 #define instmem         top__DOT__datapath__DOT__instmem
 #define Alu1out         top__DOT__datapath__DOT__Alu1out
@@ -76,41 +77,210 @@ int main(int argc, char** argv, char** env){
   if (DEBUG) printf("Giving the system 1 cycle to initialize with reset...\n");
 
   int PC = 0;
-  int OpCode = 0;
-  int R_Output = 0;
-  int R_in_1 = 0;
-  int R_in_2 = 0;
-  int R_in_3 = 0;
-  int R_ra = 0;
+  int error_count = 0;
 
-      tb->reset();
-      clock_count++;
+  tb->reset();
+  clock_count++;
   // Hit that reset button for one clock cycle:
-  for(int x = 0; x < 45; x ++){
+    tb->tick();
+    clock_count++;
+    tb->tick();
+    clock_count++;
 
-    if (DEBUG) printf("PC: %d   OP: %02x In1: %02x In2: %02x In3: %02x Result: %02x Ra: %02x\n",
-            tb->m_topsim->rootp->top__DOT__datapath__DOT__PC,
-            tb->m_topsim->rootp->Op,
-            tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[2],
-            tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[3],
-            tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[5],
-            tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[10],
-            tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[9]);
+    //addi r1, r0, 2
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 3){
+        printf("addi r1, r0, 2  \n");}
+    tb->tick();
+    clock_count++;
+
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 41){
+        printf("lh r4, 0(r0) \n");}
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 33){
+        printf("lb r5, 0(r0) \n");}
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 57){
+        printf("beq r1, r0, lbl1 \n");}
+    tb->tick();
+    clock_count++;
+
         tb->tick();
         clock_count++;
-  }
+        tb->tick();
+        clock_count++;
+        tb->tick();
+        clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op ==11){
+        printf("subi r1, r1, 1 ");
+        printf("// Finished branch: Not Taken (+)");
+    }
+    tb->tick();
+    clock_count++;
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[1] == 2){
+        printf("// Finished addi : RF = 2 (+)\n");
+    }else{
+        printf("addi failed \n");
+        error_count++;
+    }
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 40){
+        printf("and r6, r4, r5 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[4] == 43981){
+        printf("// Finished lh : RF[4] = 43981 (+)\n");
+    }else{
+        printf("lh failed \n");
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 3){
+        printf("addi r6, r6, 1 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[5] == 243){
+        printf("// Finished lb : RF[5] = 243 (+)\n");
+    }else{
+        printf("lb failed \n");
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 48){
+        printf("or  r7, r6, r5 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[1] == 1){
+        printf("// Finished subi : RF[1] = 1 (+)\n");
+    }else{
+        printf("subi failed \n");
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 80){
+        printf("srl r8, r7, 2 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[6] == 193){
+        printf("// Finished and : RF[6] = C1 (+)\n");
+    }else{
+        printf("and failed  RF[6] = %02x (-)\n", tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[6]);
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 88){
+        printf("sra r9, r8, 1 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[6] == 194){
+        printf("// Finished addi : RF[6] = C2 (+)\n");
+    }else{
+        printf("addi failed  RF[6] = %02x (-)\n", tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[6]);
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 19){
+        printf("muli r10, r9, 4095 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[7] == 243){
+        printf("// Finished or : RF[7] = F3 (+)\n");
+    }else{
+        printf("or failed  RF[6] = %02x (-)\n", tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[7]);
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 17){
+        printf("sh  r10, 20(r0) ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[8] == 60){
+        printf("// Finished srl : RF[8] = 3C (+)\n");
+    }else{
+        printf("srl failed  RF[8] = %02x (-)\n", tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[8]);
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 9){
+        printf("sb  r9, 28(r0) ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[9] ==30){
+        printf("// Finished sra : RF[9] = 1E (+)\n");
+    }else{
+        printf("sra failed  RF[9] = %02x (-)\n", tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[8]);
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 4){
+        printf("jal lbl2 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[10] == 122850){
+        printf("// Finished muli : RF[10] = 1DFE2 (+) ");
+    }else{
+        printf("muli failed  RF[10] = %02x (-) ", tb->m_topsim->rootp->top__DOT__datapath__DOT__RF[8]);
+        error_count++;
+    }
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__datamem_write_data == 122850){
+        printf("// Finished sh : mem[20] = 1DFE2 (+)\n");
+    }else{
+        printf("sh failed mem[20] = %02x (-)\n", tb->m_topsim->rootp->top__DOT__datapath__DOT__datamem_write_data);
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 0){
+        printf("jumped to lb12 ");}
+
+    if(tb->m_topsim->rootp->top__DOT__datapath__DOT__datamem_write_data == 30){
+        printf("// Finished sh : mem[28] = 1E (+)\n");
+    }else{
+        printf("sh failed mem[28] = %02x (-)\n", tb->m_topsim->rootp->top__DOT__datapath__DOT__datamem_write_data);
+        error_count++;
+    }
+    tb->tick();
+    clock_count++;
+
+    printf(" PC: %d ", tb->m_topsim->rootp->top__DOT__datapath__DOT__PC);
+    if(tb->m_topsim->rootp->Op == 57){
+        printf("lbl12: beq r1, r0, lbl1 ");}
+    tb->tick();
+    clock_count++;
 
 
-  // Change the inputs if you wish, check the outputs if you wish, and
-  // tick the clock until done:
-
-  // first enable register updates:
-//  tb->m_topsim->startSignal = 1;
-
-  // verify the unsigned adder operation using 10000 random numbers for inputs:
-
-  printf("Execution completed successfully (simulation waveforms in .vcd file) ... !\n");
-  printf("Elapsed Clock Cycles: %ld\n",clock_count);
+  printf(" \n Execution completed successfully (simulation waveforms in .vcd file) ... !\n");
+  printf(" Elapsed Clock Cycles: %ld\n",clock_count);
+  printf(" Failed #: %d\n",error_count);
   exit(EXIT_SUCCESS);
 
 }
