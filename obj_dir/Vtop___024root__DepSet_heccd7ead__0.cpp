@@ -1050,41 +1050,22 @@ VL_INLINE_OPT void Vtop___024root___sequent__TOP__0(Vtop___024root* vlSelf) {
                                                                         (vlSelf->top__DOT__datapath__DOT__IfId 
                                                                          >> 0x18U)))))));
     vlSelf->top__DOT__datapath__DOT__PCenable = (1U 
-                                                 & (~ 
-                                                    ((0U 
-                                                      != 
-                                                      (0xfU 
-                                                       & (vlSelf->top__DOT__datapath__DOT__IdEx[5U] 
-                                                          >> 8U))) 
-                                                     & (((0x1fU 
-                                                          & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                             >> 0x17U)) 
-                                                         == 
-                                                         (0x1fU 
-                                                          & (IData)(
-                                                                    (vlSelf->top__DOT__datapath__DOT__IfId 
-                                                                     >> 0x1dU)))) 
-                                                        | ((0x1fU 
-                                                            & (vlSelf->top__DOT__datapath__DOT__IdEx[0U] 
-                                                               >> 0x17U)) 
-                                                           == 
-                                                           (0x1fU 
-                                                            & ((IData)(vlSelf->top__DOT__RbSelect)
-                                                                ? (IData)(
-                                                                          (vlSelf->top__DOT__datapath__DOT__IfId 
-                                                                           >> 0x22U))
-                                                                : (IData)(
-                                                                          (vlSelf->top__DOT__datapath__DOT__IfId 
-                                                                           >> 0x18U)))))))));
-    if (((((IData)(vlSelf->top__DOT__jump_flag) | (0U 
-                                                   != (IData)(vlSelf->top__DOT__branch_flag))) 
-          | (0U != (0x30000U & vlSelf->top__DOT__datapath__DOT__IdEx[0U]))) 
-         | (0U != (0x18000U & vlSelf->top__DOT__datapath__DOT__ExMem[0U])))) {
-        vlSelf->top__DOT__datapath__DOT__PCenable = 
-            (((IData)(vlSelf->top__DOT__jump_flag) 
-              | (IData)(vlSelf->top__DOT__datapath__DOT__branch_src))
-              ? 1U : 0U);
-    }
+                                                 & ((~ 
+                                                     ((((IData)(vlSelf->top__DOT__jump_flag) 
+                                                        | (0U 
+                                                           != (IData)(vlSelf->top__DOT__branch_flag))) 
+                                                       | (0U 
+                                                          != 
+                                                          (0x30000U 
+                                                           & vlSelf->top__DOT__datapath__DOT__IdEx[0U]))) 
+                                                      | (0U 
+                                                         != 
+                                                         (0x18000U 
+                                                          & vlSelf->top__DOT__datapath__DOT__ExMem[0U])))) 
+                                                    | (((IData)(vlSelf->top__DOT__jump_flag) 
+                                                        | (IData)(vlSelf->top__DOT__datapath__DOT__branch_src))
+                                                        ? 1U
+                                                        : 0U)));
 }
 
 VL_INLINE_OPT void Vtop___024root___sequent__TOP__1(Vtop___024root* vlSelf) {

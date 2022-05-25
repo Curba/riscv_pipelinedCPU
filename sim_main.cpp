@@ -30,7 +30,7 @@
 
 
 // In case you would like he simulator to do operations conditional to DEBUG mode:
-#define DEBUG       1
+#define DEBUG       0
 
 // Note the use of top level design name here after 'V' as class type:
 class	TOPLEVEL_TB : public TESTBENCH<Vtop> {
@@ -82,6 +82,7 @@ int main(int argc, char** argv, char** env){
   tb->reset();
   clock_count++;
   // Hit that reset button for one clock cycle:
+  if(DEBUG){
     tb->tick();
     clock_count++;
     tb->tick();
@@ -277,6 +278,12 @@ int main(int argc, char** argv, char** env){
     tb->tick();
     clock_count++;
 
+  }else{
+      for(int x = 0; x < 50; x++){
+    tb->tick();
+    clock_count++;
+      }
+  }
 
   printf(" \n Execution completed successfully (simulation waveforms in .vcd file) ... !\n");
   printf(" Elapsed Clock Cycles: %ld\n",clock_count);
