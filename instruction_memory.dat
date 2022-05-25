@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+// Here are the contents of the Byte-Addressable Instruction Memory Array of 32 32-bit words
+00 00 00 00
+>>>>>>> main
 08 00 02 03
 20 00 04 29
 28 00 08 21
@@ -29,4 +34,7 @@ f8 00 10 04
 00 00 00 00
 00 00 00 00
 00 00 00 00
+<<<<<<< HEAD
 00 00 00 00
+=======
+>>>>>>> main
