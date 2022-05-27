@@ -1,0 +1,5 @@
+ExMem.RegWrite
+ExMem.rd
+IdEx.ra
+ExMem.branch_flag
+

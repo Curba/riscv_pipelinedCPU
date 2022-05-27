@@ -57,7 +57,7 @@ module datapath(input logic clk, reset,
     logic IfIdEN;
     logic flush;
 
-    logi [1:0]branchId;
+    logic [1:0]branchId;
     logic [1:0] branchex;
     assign  branchId = IdEx.branch_flag;
     assign  branchex = ExMem.branch_flag;
@@ -180,29 +180,33 @@ module datapath(input logic clk, reset,
             IdEx.branch_flag <= 0;
 			IdEx.RbSelect <= 0;
 			IdEx.double_jump_flag <= 0;
+            IdEx.ra <= IdEx.ra;
         end
-        IdEx.MemSignExtend <= MemSignExtend;
-		IdEx.ALUSrc <= ALUSrc;
-		IdEx.ALUOp <= ALUOp;
-		IdEx.ALUOp2 <= ALUOp2;
-		IdEx.MemRead <= MemRead;
-		IdEx.MemWrite <= MemWrite;
-		IdEx.MemToReg <= MemToReg;
-		IdEx.RegWrite <= RegWrite;
-		IdEx.PCincremented <= IfId.PCincremented;
-        IdEx.branch_addr <= IfId.instruction [21:8];
-        IdEx.branch_flag <= branch_flag;
-		IdEx.da	<= da;
-		IdEx.db	<= db;
-		IdEx.dc	<= dc;
-		IdEx.shamt <= IfId.instruction[16:12];
-		IdEx.rd <= IfId.instruction[31:27];
-		IdEx.signextend <= { {(18){IfId.instruction [21]}},IfId.instruction [21:8] };
-        IdEx.ra <= IfId.instruction[26:22];
-        IdEx.rb <= (RbSelect) ? IfId.instruction[31:27]:IfId.instruction[21:17];
-        IdEx.rc <= IfId.instruction[16:12];
-		IdEx.RbSelect <= RbSelect;
-		IdEx.double_jump_flag <= double_jump_flag;
+        else
+            begin
+            IdEx.MemSignExtend <= MemSignExtend;
+            IdEx.ALUSrc <= ALUSrc;
+            IdEx.ALUOp <= ALUOp;
+            IdEx.ALUOp2 <= ALUOp2;
+            IdEx.MemRead <= MemRead;
+            IdEx.MemWrite <= MemWrite;
+            IdEx.MemToReg <= MemToReg;
+            IdEx.RegWrite <= RegWrite;
+            IdEx.PCincremented <= IfId.PCincremented;
+            IdEx.branch_addr <= IfId.instruction [21:8];
+            IdEx.branch_flag <= branch_flag;
+            IdEx.da	<= da;
+            IdEx.db	<= db;
+            IdEx.dc	<= dc;
+            IdEx.shamt <= IfId.instruction[16:12];
+            IdEx.rd <= IfId.instruction[31:27];
+            IdEx.signextend <= { {(18){IfId.instruction [21]}},IfId.instruction [21:8] };
+            IdEx.ra <= IfId.instruction[26:22];
+            IdEx.rb <= (RbSelect) ? IfId.instruction[31:27]:IfId.instruction[21:17];
+            IdEx.rc <= IfId.instruction[16:12];
+            IdEx.RbSelect <= RbSelect;
+            IdEx.double_jump_flag <= double_jump_flag;
+            end
 	end
 
 	// Execute Stage Variables
@@ -220,40 +224,54 @@ module datapath(input logic clk, reset,
 	assign idexra=IdEx.ra;
 	assign idexrb= IdEx.rb;
 	assign exmembranchflag= ExMem.branch_flag;
+
+    logic debugmemwbregwrite;
+    logic [4:0] debugmemwbrd;
+    logic [4:0] debugexmemrd;
+    logic [4:0] debugidexra;
+
+    assign debugmemwbregwrite = MemWb.RegWrite;
+    assign debugmemwbrd = MemWb.rd;
+    assign debugexmemrd = ExMem.rd;
+    assign debugidexra = IdEx.ra;
+
     always_comb begin
-      if ((ExMem.RegWrite)&&(ExMem.rd !=0) && ((ExMem.rd != IdEx.ra && ExMem.rd == IdEx.ra) || (ExMem.branch_flag == 0 && ExMem.rd == IdEx.ra)))
-             ForwardingA = 2'b10;
-         else if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.ra && MemWb.rd == IdEx.ra)
-             ForwardingA = 2'b01;
-         else
-             ForwardingA = 2'b00;
+    //  if(!(transfer_in_progress == 1 && (ForwardingC != 0 || ForwardingB != 0 || ForwardingA != 0)))
+   //     begin
+          if ((ExMem.RegWrite)&&(ExMem.rd !=0) && ((ExMem.rd != IdEx.ra && ExMem.rd == IdEx.ra) || (ExMem.branch_flag == 0 && ExMem.rd == IdEx.ra)))
+                 ForwardingA = 2'b10;
+             else if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.ra && MemWb.rd == IdEx.ra)
+                 ForwardingA = 2'b01;
+             else
+                 ForwardingA = 2'b00;
 
-         if ((ExMem.RegWrite)&& (ExMem.rd !=0) && ((ExMem.rd != IdEx.rb && ExMem.rd == IdEx.rb) || (ExMem.branch_flag == 0 && ExMem.rd == IdEx.rb && ExMem.rd == IdEx.ra)))
-             ForwardingB = 2'b10;
-         else if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.rb && MemWb.rd == IdEx.rb)
-            ForwardingB = 2'b01;
-        else
-             ForwardingB = 2'b00;
+             if ((ExMem.RegWrite)&& (ExMem.rd !=0) && ((ExMem.rd != IdEx.rb && ExMem.rd == IdEx.rb) || (ExMem.branch_flag == 0 && ExMem.rd == IdEx.rb && ExMem.rd == IdEx.ra)))
+                 ForwardingB = 2'b10;
+             else if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.rb && MemWb.rd == IdEx.rb)
+                ForwardingB = 2'b01;
+            else
+                 ForwardingB = 2'b00;
 
-        case(ForwardingA)
-            2'b00: alu1in_a = IdEx.da; // If there is no forwarding Alu input1 from IdEx.da
-            2'b01: alu1in_a = RF_WriteData;
-            2'b10:  alu1in_a = ExMem.Alu1out; // If forwarding logic set to 10, corresponding data at ExMem register
-            default: alu1in_a = ExMem.Alu1out;
-    	endcase
+            if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.rc && MemWb.rd == ExMem.rc)
+                ForwardingC = 1;
+            else
+                ForwardingC = 0;
 
-        case(ForwardingB)
-            2'b00: alu1in_b = alu1in_b_mux;
-            2'b01: alu1in_b = RF_WriteData;
-            2'b10: alu1in_b = ExMem.Alu1out;
-            default: alu1in_b = ExMem.Alu1out;
-        endcase
+//            end
 
-        if (MemWb.RegWrite && MemWb.rd !=0 && ExMem.rd != IdEx.rc && MemWb.rd == ExMem.rc)
-            ForwardingC = 1;
-        else
-            ForwardingC = 0;
+            case(ForwardingA)
+                2'b00: alu1in_a = IdEx.da; // If there is no forwarding Alu input1 from IdEx.da
+                2'b01: alu1in_a = RF_WriteData;
+                2'b10:  alu1in_a = ExMem.Alu1out; // If forwarding logic set to 10, corresponding data at ExMem register
+                default: alu1in_a = ExMem.Alu1out;
+            endcase
 
+            case(ForwardingB)
+                2'b00: alu1in_b = alu1in_b_mux;
+                2'b01: alu1in_b = RF_WriteData;
+                2'b10: alu1in_b = ExMem.Alu1out;
+                default: alu1in_b = ExMem.Alu1out;
+            endcase
 		if (MemWb.rd !=0 && MemWb.rd == ExMem.rd)
             ForwardingD = 1;
         else
@@ -307,22 +325,30 @@ module datapath(input logic clk, reset,
 
 	// Ex Mem Stage
 	always @ (posedge clk) begin
-        ExMem.PCincremented <= IdEx.PCincremented;
-        ExMem.MemSignExtend <= IdEx.MemSignExtend;
-		ExMem.MemRead <= IdEx.MemRead;
-		ExMem.MemWrite <= IdEx.MemWrite;
-		ExMem.RegWrite <= IdEx.RegWrite;
-		ExMem.MemToReg <= IdEx.MemToReg;
-		ExMem.Alu1out <= Alu1out;
-        ExMem.ALUOp2 <= IdEx.ALUOp2;
-		ExMem.db <= IdEx.db;
-		ExMem.dc <= IdEx.dc;
-		ExMem.rd <= IdEx.rd;
-		ExMem.rc <= IdEx.rc;
-        ExMem.zero_flag <= zero_flag;
-        ExMem.branch_flag <= IdEx.branch_flag;
-        ExMem.branch_addr <= IdEx.branch_addr;
-		ExMem.double_jump_flag <= IdEx.double_jump_flag;
+        if(stall_flag)begin
+            ExMem.RegWrite <= ExMem.RegWrite;
+            ExMem.rd <= ExMem.rd;
+            ExMem.branch_flag <= ExMem.branch_flag;
+        end
+        else
+            begin
+            ExMem.PCincremented <= IdEx.PCincremented;
+            ExMem.MemSignExtend <= IdEx.MemSignExtend;
+            ExMem.MemRead <= IdEx.MemRead;
+            ExMem.MemWrite <= IdEx.MemWrite;
+            ExMem.RegWrite <= IdEx.RegWrite;
+            ExMem.MemToReg <= IdEx.MemToReg;
+            ExMem.Alu1out <= Alu1out;
+            ExMem.ALUOp2 <= IdEx.ALUOp2;
+            ExMem.db <= IdEx.db;
+            ExMem.dc <= IdEx.dc;
+            ExMem.rd <= IdEx.rd;
+            ExMem.rc <= IdEx.rc;
+            ExMem.zero_flag <= zero_flag;
+            ExMem.branch_flag <= IdEx.branch_flag;
+            ExMem.branch_addr <= IdEx.branch_addr;
+            ExMem.double_jump_flag <= IdEx.double_jump_flag;
+            end
 	end
 
 	logic [31:0] alu2in_a;
@@ -360,14 +386,20 @@ module datapath(input logic clk, reset,
 
 	//ex/mem
 	always @ (posedge clk) begin
-        MemWb.PCincremented <= ExMem.PCincremented;
-		MemWb.RegWrite <= ExMem.RegWrite;
-		MemWb.MemToReg <= ExMem.MemToReg;
-		MemWb.datamem_data <= datamem_data;
-		MemWb.Alu2out <= Alu2out;
-		MemWb.rd <= ExMem.rd;
-
-	end
+        if(stall_flag)begin
+            MemWb.rd <= MemWb.rd;
+		    MemWb.RegWrite <=MemWb.RegWrite;
+        end
+        else
+            begin
+            MemWb.PCincremented <= ExMem.PCincremented;
+            MemWb.RegWrite <= ExMem.RegWrite;
+            MemWb.MemToReg <= ExMem.MemToReg;
+            MemWb.datamem_data <= datamem_data;
+            MemWb.Alu2out <= Alu2out;
+            MemWb.rd <= ExMem.rd;
+            end
+	    end
 
 /*
 

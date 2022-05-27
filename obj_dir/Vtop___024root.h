@@ -186,7 +186,7 @@ VL_MODULE(Vtop___024root) {
         VlUnpacked<CData/*7:0*/, 4096> top__DOT__memory__DOT__dram_controller__DOT__dram_interface_icache__DOT__dram__DOT__dram_array__DOT__mem;
         VlUnpacked<IData/*31:0*/, 8> top__DOT__memory__DOT__dram_controller__DOT__dram_interface_dcache__DOT__data_from_mem;
         VlUnpacked<CData/*7:0*/, 4096> top__DOT__memory__DOT__dram_controller__DOT__dram_interface_dcache__DOT__dram__DOT__dram_array__DOT__mem;
-        VlUnpacked<CData/*0:0*/, 5> __Vm_traceActivity;
+        VlUnpacked<CData/*0:0*/, 6> __Vm_traceActivity;
     };
 
     // INTERNAL VARIABLES
