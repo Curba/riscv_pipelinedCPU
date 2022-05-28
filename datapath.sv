@@ -180,7 +180,21 @@ module datapath(input logic clk, reset,
             IdEx.branch_flag <= 0;
 			IdEx.RbSelect <= 0;
 			IdEx.double_jump_flag <= 0;
+            /*
             IdEx.ra <= IdEx.ra;
+            IdEx.PCincremented <= IdEx.PCincremented;
+            IdEx.branch_addr <= IdEx.branch_addr;
+            IdEx.branch_flag <= IdEx.branch_flag;
+            IdEx.da	<= IdEx.da;
+            IdEx.db	<= IdEx.db;
+            IdEx.dc	<= IdEx.dc;
+            IdEx.shamt <= IdEx.shamt;
+            IdEx.rd <= IdEx.rd;
+            IdEx.signextend <= IdEx.signextend;
+            IdEx.ra <= IdEx.ra;
+            IdEx.rb <= IdEx.rb;
+            IdEx.rc <= IdEx.rc;
+            */
         end
         else
             begin
@@ -226,6 +240,8 @@ module datapath(input logic clk, reset,
 	assign exmembranchflag= ExMem.branch_flag;
 
     logic debugmemwbregwrite;
+    logic debugexmemregwrite;
+    logic [1:0] debugbranch;
     logic [4:0] debugmemwbrd;
     logic [4:0] debugexmemrd;
     logic [4:0] debugidexra;
@@ -234,6 +250,8 @@ module datapath(input logic clk, reset,
     assign debugmemwbrd = MemWb.rd;
     assign debugexmemrd = ExMem.rd;
     assign debugidexra = IdEx.ra;
+    assign debugexmemregwrite = ExMem.RegWrite;
+    assign debugbranch = ExMem.branch_flag;
 
     always_comb begin
     //  if(!(transfer_in_progress == 1 && (ForwardingC != 0 || ForwardingB != 0 || ForwardingA != 0)))
@@ -326,9 +344,24 @@ module datapath(input logic clk, reset,
 	// Ex Mem Stage
 	always @ (posedge clk) begin
         if(stall_flag)begin
+/*
+            ExMem.PCincremented <= ExMem.PCincremented;
+            ExMem.MemSignExtend <= ExMem.MemSignExtend;
+            //ExMem.MemRead <= ExMem.MemRead;
+            ExMem.MemWrite <= ExMem.MemWrite;
             ExMem.RegWrite <= ExMem.RegWrite;
+            ExMem.MemToReg <= ExMem.MemToReg;
+            ExMem.Alu1out <= ExMem.Alu1out;
+            ExMem.ALUOp2 <= ExMem.ALUOp2;
+            ExMem.db <= ExMem.db;
+            ExMem.dc <= ExMem.dc;
             ExMem.rd <= ExMem.rd;
+            ExMem.rc <= ExMem.rc;
+            ExMem.zero_flag <= ExMem.zero_flag;
             ExMem.branch_flag <= ExMem.branch_flag;
+            ExMem.branch_addr <= ExMem.branch_addr;
+            ExMem.double_jump_flag <= ExMem.double_jump_flag;
+            */
         end
         else
             begin
@@ -384,11 +417,16 @@ module datapath(input logic clk, reset,
 		logic [4:0] rd;
 	} MemWb;
 
-	//ex/mem
 	always @ (posedge clk) begin
         if(stall_flag)begin
+            /*
+            MemWb.PCincremented <= MemWb.PCincremented;
+            MemWb.RegWrite <= MemWb.RegWrite;
+            MemWb.MemToReg <= MemWb.MemToReg;
+            //MemWb.datamem_data <= MemWb.datamem_data;
+            MemWb.Alu2out <= MemWb.Alu2out;
             MemWb.rd <= MemWb.rd;
-		    MemWb.RegWrite <=MemWb.RegWrite;
+            */
         end
         else
             begin
@@ -433,7 +471,7 @@ module datapath(input logic clk, reset,
 
 	// Data Memory Read Logic
     assign dcache_dataRequest = (ExMem.MemRead != 0) ? 1:0;
-    assign datamem_address = dcache_address;
+    assign dcache_address = datamem_address;
     assign datamem_data = dcache_readData;
 
     always_comb begin

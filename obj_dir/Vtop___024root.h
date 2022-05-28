@@ -98,10 +98,8 @@ VL_MODULE(Vtop___024root) {
         CData/*0:0*/ __Vchglast__TOP__top__DOT__memory__DOT__dcache_controller__DOT__mem_request_valid;
         CData/*0:0*/ __Vchglast__TOP__top__DOT__memory__DOT__dram_controller__DOT__dram_interface_icache__DOT__acknowledge;
         CData/*0:0*/ __Vchglast__TOP__top__DOT__memory__DOT__dram_controller__DOT__dram_interface_dcache__DOT__acknowledge;
-        SData/*11:0*/ top__DOT__dcache_address;
         SData/*11:0*/ top__DOT__datapath__DOT__PC;
         SData/*11:0*/ top__DOT__datapath__DOT__datamem;
-        SData/*11:0*/ top__DOT__datapath__DOT__datamem_address;
         SData/*11:0*/ top__DOT__memory__DOT__dcache_controller__DOT__mem_request_address;
         SData/*11:0*/ top__DOT__memory__DOT__dram_controller__DOT__dram_interface_icache__DOT__address_to_mem;
         SData/*11:0*/ top__DOT__memory__DOT__dram_controller__DOT__dram_interface_icache__DOT__address_to_mem_with_word_offset;
@@ -144,10 +142,10 @@ VL_MODULE(Vtop___024root) {
         VlWide<7>/*201:0*/ top__DOT__datapath__DOT__IdEx;
         VlWide<5>/*148:0*/ top__DOT__datapath__DOT__ExMem;
         VlWide<3>/*83:0*/ top__DOT__datapath__DOT__MemWb;
-    };
-    struct {
         QData/*34:0*/ top__DOT__memory__DOT__dram_controller__DOT__dram_interface_icache__DOT__dram__DOT__read_acknowledge_delay_line;
         QData/*38:0*/ top__DOT__memory__DOT__dram_controller__DOT__dram_interface_icache__DOT__dram__DOT__write_acknowledge_delay_line;
+    };
+    struct {
         QData/*34:0*/ top__DOT__memory__DOT__dram_controller__DOT__dram_interface_dcache__DOT__dram__DOT__read_acknowledge_delay_line;
         QData/*38:0*/ top__DOT__memory__DOT__dram_controller__DOT__dram_interface_dcache__DOT__dram__DOT__write_acknowledge_delay_line;
         VlUnpacked<IData/*31:0*/, 32> top__DOT__datapath__DOT__RF;
